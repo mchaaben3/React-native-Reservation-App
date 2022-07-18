@@ -18,7 +18,7 @@ const colors = {
   black: '#444',
   green: '#4caf50',
   yellow: '#ffc247',
-  red: '#f04241',
+  red: '#EF4444',
   errorClor: '#f65e78',
   blackTrans: '#00000078',
   transparent: '#fff0',

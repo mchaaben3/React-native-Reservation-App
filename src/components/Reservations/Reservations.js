@@ -23,6 +23,7 @@ import {
 } from '../../redux/actions/reservationsActions';
 import { useEffect } from 'react';
 import { CardOfReservations } from '../../helpers/CardOfReservations';
+import { ModalScreen, ResInfo } from '../../helpers/ResInfo';
 
 const ItemView = ({ item }) => {
   return (
@@ -36,6 +37,8 @@ const Reservations = () => {
   const [loading, setLoading] = useState(true);
   const [masterData, setMasterData] = useState([]);
   const dispatch = useDispatch();
+  const modalRef = useRef(null);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   //get reservations from server
   const { data } = useSelector((state) => state.reservations);
   useEffect(() => {
@@ -55,6 +58,7 @@ const Reservations = () => {
   const searchFilterFunction = async (status) => {
     return null;
   };
+
   return (
     <View
       style={{
@@ -127,7 +131,7 @@ const Reservations = () => {
       </View>
       <View
         style={{
-          flex: 0.8,
+          flex: 1,
 
           justifyContent: 'center',
           alignItems: 'center',
@@ -140,8 +144,21 @@ const Reservations = () => {
             <FlatList
               data={masterData}
               renderItem={({ item, index }) => (
-                <CardOfReservations data={item} index={index} key={item._id} />
+                <>
+                  <CardOfReservations
+                    data={item}
+                    index={index}
+                    key={item._id}
+                    open={(data) => {
+                      modalRef?.current?.open();
+                      setSelectedReservation(item);
+                    }}
+                  />
+                </>
               )}
+              onSwipeLeft={(data) => {
+                console.log(data);
+              }}
               keyExtractor={(item) => item._id}
             />
           </>
@@ -158,6 +175,14 @@ const Reservations = () => {
           </Text>
         )}
       </View>
+      {selectedReservation && (
+        <ResInfo
+          modal={modalRef}
+          selectedReservation={selectedReservation}
+          masterData={masterData}
+          setMasterData={setMasterData}
+        />
+      )}
     </View>
   );
 };

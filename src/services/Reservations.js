@@ -85,4 +85,12 @@ export const Reservations = {
       return error;
     }
   },
+  deleteReservation: async (id) => {
+    try {
+      const response = await axios.delete(`/reservations/${id}`);
+      return response.data.data.reservation;
+    } catch (error) {
+      return error;
+    }
+  },
 };

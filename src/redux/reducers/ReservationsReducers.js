@@ -1,6 +1,9 @@
 //get reservations reducer
 
 import {
+  DELETE_RES_FAIL,
+  DELETE_RES_REQUEST,
+  DELETE_RES_SUCCESS,
   EDIT_RES_FAIL,
   EDIT_RES_REQUEST,
   EDIT_RES_SUCCESS,

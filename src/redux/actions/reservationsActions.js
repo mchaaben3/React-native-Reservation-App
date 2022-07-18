@@ -2,6 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Reservations } from '../../services/Reservations';
 import {
+  DELETE_RES_FAIL,
+  DELETE_RES_REQUEST,
+  DELETE_RES_SUCCESS,
   GET_LIST_FAIL,
   GET_LIST_REQUEST,
   GET_LIST_SUCCESS,
@@ -136,6 +139,27 @@ export const getReservationByStatus = (status) => {
       });
   };
 };
+//delete reservation
+export const deleteReservation = (id) => {
+  return async (dispatch) => {
+    dispatch({ type: DELETE_RES_REQUEST });
+    Reservations.deleteReservation(id)
+
+      .then((response) => {
+        dispatch({
+          type: DELETE_RES_SUCCESS,
+          payload: response,
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: DELETE_RES_FAIL,
+          payload: error.response.data.message,
+        });
+      });
+  };
+};
+
 /******************************************************** */
 //edit reservation
 // export const editReservation = (link) => {

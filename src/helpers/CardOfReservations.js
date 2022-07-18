@@ -1,11 +1,3 @@
-import {
-  faEdit,
-  faMonument,
-  faPhone,
-  faTimes,
-  faUsers,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, { useState } from 'react';
 import {
   Animated,
@@ -15,13 +7,15 @@ import {
   StyleSheet,
   Text,
   View,
+  SwipeView,
 } from 'react-native';
 import { colors } from '../constants';
-import Moment from 'react-moment';
+// import Moment from 'react-moment';
+import moment from 'moment';
 import { itemStatusPickColor } from './itemStatusPickColor';
-export const CardOfReservations = ({ data, index }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+import { deleteReservation } from '../redux/actions/reservationsActions';
 
+export const CardOfReservations = ({ data, index, modal, open }) => {
   const SPACING = 20;
   const AVATAR_SIZE = 50;
   const ITEM_SIZE = AVATAR_SIZE + SPACING * 2;
@@ -57,16 +51,15 @@ export const CardOfReservations = ({ data, index }) => {
           >
             #{data.ref}
           </Text>
-          <Moment
-            element={Text}
-            format="MM-DD-YYYY"
+          <Text
             style={{
               fontSize: 12,
-              color: colors.gray,
+              fontWeight: '700',
+              marginRight: SPACING,
             }}
           >
-            {data.date}
-          </Moment>
+            {moment(data.date).format('DD-MM-YYYY')}
+          </Text>
         </View>
         <View
           style={{
@@ -115,7 +108,7 @@ export const CardOfReservations = ({ data, index }) => {
               backgroundColor: colors.lightGray,
             }}
           >
-            <Pressable onPress={() => setModalVisible(true)}>
+            <Pressable onPress={() => open(data._id)}>
               <Text
                 style={{
                   fontSize: 12,
@@ -152,77 +145,10 @@ export const CardOfReservations = ({ data, index }) => {
           </View>
         </View>
       </View>
-      <ModalScreen
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        data={data}
-      />
     </View>
   );
 };
 
-const ModalScreen = ({ modalVisible, setModalVisible, data }) => {
-  return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => setModalVisible(!modalVisible)}
-        >
-          <Text style={styles.textStyle}>X</Text>
-        </Pressable>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '100',
-                  opacity: 0.8,
-                }}
-              >
-                <FontAwesomeIcon icon={faUsers} size={15} />
-                {' : '}
-                {data.numOfPersons}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 12,
-                  fontWeight: '100',
-                  opacity: 0.8,
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faPhone}
-                  size={12}
-                  style={{
-                    marginRight: 4,
-                    marginTop: 2,
-                  }}
-                />{' '}
-                : {data.client.profile.phone}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -246,7 +172,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   modalView: {
-    flex: 0.3,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: colors.white,
     padding: 20,
     borderRadius: 8,
