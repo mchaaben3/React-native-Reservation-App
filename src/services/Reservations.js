@@ -93,4 +93,16 @@ export const Reservations = {
       return error;
     }
   },
+  editReservation: async (id, payload) => {
+    try {
+      const response = await axios.patch(`/reservations/${id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${await AsyncStorage.getItem('token')}`,
+        },
+      });
+      return response.data.data.reservation;
+    } catch (error) {
+      return error;
+    }
+  },
 };

@@ -5,6 +5,9 @@ import {
   DELETE_RES_FAIL,
   DELETE_RES_REQUEST,
   DELETE_RES_SUCCESS,
+  EDIT_RES_FAIL,
+  EDIT_RES_REQUEST,
+  EDIT_RES_SUCCESS,
   GET_LIST_FAIL,
   GET_LIST_REQUEST,
   GET_LIST_SUCCESS,
@@ -160,29 +163,22 @@ export const deleteReservation = (id) => {
   };
 };
 
-/******************************************************** */
 //edit reservation
-// export const editReservation = (link) => {
-//   return async (dispatch) => {
-//     dispatch({ type: GET_LIST_REQUEST });
-//     try {
-//       const response = await axios.patch(
-//         link,
-//         {
-//           status: 'CONFIRMED',
-//         },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${await AsyncStorage.getItem('token')}`,
-//           },
-//         }
-//       );
-//       dispatch({
-//         type: GET_LIST_SUCCESS,
-//         payload: response.data.data.reservation,
-//       });
-//     } catch (error) {
-//       dispatch({ type: GET_LIST_FAIL, payload: error });
-//     }
-//   };
-// };
+export const editReservation = (id, payload) => {
+  return async (dispatch) => {
+    dispatch({ type: EDIT_RES_REQUEST });
+    Reservations.editReservation(id, payload)
+      .then((response) => {
+        dispatch({
+          type: EDIT_RES_SUCCESS,
+          payload: response,
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: EDIT_RES_FAIL,
+          payload: error.response.data.message,
+        });
+      });
+  };
+};
